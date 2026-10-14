@@ -823,7 +823,20 @@ updateEstimate();
     {kicker:'BUILT TO GO FURTHER',title:'Across the distance.\nInto the wider network.',description:'High-voltage lines carry electricity between generation centres and demand centres. Gantries, circuit breakers and utility interfaces connect a project to that wider network.',link:'See our engineering standards',href:'#standards'},
     {kicker:'THE REASON BEHIND THE ENGINEERING',title:'Everyday life.\nExtraordinary connections.',description:'Distribution substations lower the voltage before local feeders deliver electricity to homes and businesses. The entire journey supports the places where people live, work and grow.',link:'Start your own project',href:'#contact'}
   ];
-  function updateStatus(){byId('flow-status').textContent=`${sourceLabels[source]} · ${stageNames[stage]} · ${night?'Night':'Day'} view · Animation ${paused?'paused':'running'}`;}
+  /* The diagram's <desc> was fixed text naming both sources and no stage, so
+     to anyone reading the illustration through its description it never
+     changed - switching to Solar still described turbines, and the highlighted
+     stage was invisible. It now tracks the state the picture is actually in. */
+  const sourceDescriptions={wind:'Wind turbines feed',solar:'Solar panels feed',hybrid:'Wind turbines and solar panels feed'};
+  function updateDiagramDescription(){
+    const description=byId('flow-diagram-description');
+    if(!description)return;
+    description.textContent=`${sourceDescriptions[source]} a step-up substation. Moving dashes trace electricity through transmission towers to homes and businesses. Stage ${stage+1} of 4, ${stageNames[stage]}, is highlighted, in the ${night?'night':'day'} palette. This is a conceptual diagram, not live operational data.`;
+  }
+  function updateStatus(){
+    byId('flow-status').textContent=`${sourceLabels[source]} · ${stageNames[stage]} · ${night?'Night':'Day'} view · Animation ${paused?'paused':'running'}`;
+    updateDiagramDescription();
+  }
   function updateMotion(){
     document.documentElement.classList.toggle('motion-paused',paused);
     document.documentElement.dataset.motionOptIn=String(motionChosen&&!paused);
